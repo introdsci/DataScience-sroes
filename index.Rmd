@@ -1,0 +1,24 @@
+---
+title: " " #replace the title with something short and catchy to represent your project
+subtitle: "____'s Data Science Portfolio" #replace blank with your name
+output:
+  html_document:
+    df_print: paged
+---
+
+## Abstract
+
+In under 250 words give a brief summary of the project so far.
+
+### 1. Discovery and Data Preparation
+
+Provide a one-sentence introduction with what is covered by the first deliverable along with a link to another html page that gives the details.
+
+### 2. Model Planning and Building
+
+Coming soon...
+
+### 3. Results and Operationalization
+
+Coming soon...
+
