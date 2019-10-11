@@ -1,6 +1,6 @@
 ---
 title: " " #replace the title with something short and catchy to represent your project
-subtitle: "____'s Data Science Portfolio" #replace blank with your name
+subtitle: "Scott's Data Science Portfolio" #replace blank with your name
 output:
   html_document:
     df_print: paged
@@ -8,17 +8,22 @@ output:
 
 ## Abstract
 
+In this project I am observing nba stats from 2015/2016. I am a basketball fan and love looking at players stats and seeing how well or how not well they are preforming on the court. In this particular project I will be observing the players who did do well in the 2015/2016 season. My dataset is based on players with the highest points per game average and along with finding correlations that relate to high scoring.
+
 In under 250 words give a brief summary of the project so far.
 
 ### 1. Discovery and Data Preparation
 
 Provide a one-sentence introduction with what is covered by the first deliverable along with a link to another html page that gives the details.
-
+Link: [here](./deliverable1.html)
 ### 2. Model Planning and Building
 
 Coming soon...
 
-### 3. Results and Operationalization
+### 3. Results and Operationalization 
 
-Coming soon...
+```{r}
+plot(cars)
+```
+
 

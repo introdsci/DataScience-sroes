@@ -1,0 +1,25 @@
+---
+title: "R Notebook"
+author: "Scott Roes"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library("tidyverse")
+library("dplyr")
+library("ggplot2")
+
+NbaData <- read_csv("https://raw.githubusercontent.com/AddisonGauss/NbaData2015-2016/master/NBApoints.csv")
+
+```
+```{r}
+
+
+
+
+```
+
+
+
