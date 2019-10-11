@@ -22,8 +22,6 @@ Coming soon...
 
 ### 3. Results and Operationalization 
 
-```{r}
-plot(cars)
-```
+
 
 

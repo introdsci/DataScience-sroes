@@ -6,16 +6,16 @@ output:
     df_print: paged
 ---
 
-```{r}
+```{r setup, include=FALSE}
 library("tidyverse")
 library("dplyr")
 library("ggplot2")
 
-NbaData <- read_csv("https://raw.githubusercontent.com/AddisonGauss/NbaData2015-2016/master/NBApoints.csv")
 
 ```
 ```{r}
 
+#NbaData <- read_csv("https://raw.githubusercontent.com/AddisonGauss/NbaData2015-2016/master/NBApoints.csv")
 
 
 
