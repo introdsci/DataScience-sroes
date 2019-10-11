@@ -15,7 +15,7 @@ library("ggplot2")
 ```
 ```{r}
 
-#NbaData <- read_csv("https://raw.githubusercontent.com/AddisonGauss/NbaData2015-2016/master/NBApoints.csv")
+NbaData <- read_csv("https://raw.githubusercontent.com/AddisonGauss/NbaData2015-2016/master/NBApoints.csv")
 
 
 
