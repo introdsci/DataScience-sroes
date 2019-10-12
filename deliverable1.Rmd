@@ -11,15 +11,104 @@ library("tidyverse")
 library("dplyr")
 library("ggplot2")
 
-
 ```
+The dataset I included for this project was tidy and mostly clean to begin with. In order to get a completely clean dataset, I renamed columns for easy interpretation. I also removed one observation for Cameron Curry due to the format not being the same as the other observations.
+
 ```{r}
 
-NbaData <- read_csv("https://raw.githubusercontent.com/AddisonGauss/NbaData2015-2016/master/NBApoints.csv")
+NCAAData <- read_csv("https://raw.githubusercontent.com/TWanish/NBAPlayerValue/master/data/ncaaStats.csv")
+
+# tidying data
+colnames(NCAAData)[colnames(NCAAData) == "Pos"] <- "Position"
+colnames(NCAAData)[colnames(NCAAData) == "G"] <- "Games"
+colnames(NCAAData)[colnames(NCAAData) == "AST%"] <- "Assist_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "BLK%"] <- "Block_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "MP"] <- "Minutes_Played"
+colnames(NCAAData)[colnames(NCAAData) == "FG"] <- "Field_Goal"
+colnames(NCAAData)[colnames(NCAAData) == "FGA"] <- "Field_Goal_Average"
+colnames(NCAAData)[colnames(NCAAData) == "FG%"] <- "Field_Goal_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "2P"] <- "Two_Pointers"
+colnames(NCAAData)[colnames(NCAAData) == "2PA"] <- "Two_Point_Average"
+colnames(NCAAData)[colnames(NCAAData) == "2P%"] <- "Two_Point_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "3P"] <- "Three_Pointers"
+colnames(NCAAData)[colnames(NCAAData) == "3PA"] <- "Three_Point_Average"
+colnames(NCAAData)[colnames(NCAAData) == "3P%"] <- "Three_Point_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "FT"] <- "Free_Throw"
+colnames(NCAAData)[colnames(NCAAData) == "FTA"] <- "Free_Throw_Average"
+colnames(NCAAData)[colnames(NCAAData) == "FT%"] <- "Free_Throw_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "TRB"] <- "Total_Rebounds"
+colnames(NCAAData)[colnames(NCAAData) == "AST"] <- "Assists"
+colnames(NCAAData)[colnames(NCAAData) == "STL"] <- "Steals"
+colnames(NCAAData)[colnames(NCAAData) == "BLK"] <- "Blocks"
+colnames(NCAAData)[colnames(NCAAData) == "TOV"] <- "Turnovers"
+colnames(NCAAData)[colnames(NCAAData) == "PF"] <- "Personal_Fouls"
+colnames(NCAAData)[colnames(NCAAData) == "PTS"] <- "Points"
+colnames(NCAAData)[colnames(NCAAData) == "ORtg"] <- "Offensive_Rating"
+colnames(NCAAData)[colnames(NCAAData) == "DRtg"] <- "Defensive_Rating"
+colnames(NCAAData)[colnames(NCAAData) == "PER"] <- "Player_Efficiency_Rating"
+colnames(NCAAData)[colnames(NCAAData) == "TS%"] <- "True_Shooting_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "eFG%"] <- "Effective_Field_Goal_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "3PAr"] <- "Three_Pointer_Attempt_Rate"
+colnames(NCAAData)[colnames(NCAAData) == "FTr"] <- "Free_Throw_Rate"
+colnames(NCAAData)[colnames(NCAAData) == "PProd"] <- "Points_Produced"
+colnames(NCAAData)[colnames(NCAAData) == "ORB%"] <- "Offensive_Rebound_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "DRB%"] <- "Defensive_Rebound_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "TRB%"] <- "Total_Rebound_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "STL%"] <- "Steal_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "TOV%"] <- "Turnover_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "USG%"] <- "Usage_Percentage"
+colnames(NCAAData)[colnames(NCAAData) == "OWS"] <- "Offensive_Win_Shares"
+colnames(NCAAData)[colnames(NCAAData) == "DWS"] <- "Defensive_Win_Shares"
+colnames(NCAAData)[colnames(NCAAData) == "WS"] <- "Win_Shares"
+colnames(NCAAData)[colnames(NCAAData) == "WS/40"] <- "Win_Shares_per40_Minutes"
+colnames(NCAAData)[colnames(NCAAData) == "OBPM"] <- "Offensive_Box_Plus/Minus"
+colnames(NCAAData)[colnames(NCAAData) == "DBPM"] <- "Defensive_Box_Plus/Minus"
+colnames(NCAAData)[colnames(NCAAData) == "BPM"] <- "Box_Plus/Minus"
+
+
+NCAAData <- filter(NCAAData, Player!="Cameron Curry")
+```
+
+```{r}
+
+
+filter(NCAAData, NCAAData$School=='Duke') %>%
+  ggplot(aes(x=Player)) +
+  geom_point(aes(y=Points)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+# mean PPG average for ACC
+filter(NCAAData, School %in% c('Duke', 'North Carolina', 'Boston College', 'Virginia', 'Pittsburgh', 'Georgia Tech', 'Notre Dame', 'Louisville', 'Miami', 'Wake Forest', 'Florida State', 'Virginia Tech', 'Clemson', 'Syracuse')) %>%
+  group_by(School) %>%
+  summarize(Mean_Points_Per_Game=mean(Points))
+
+filter(NCAAData, School %in% c('Duke', 'North Carolina', 'Boston College', 'Virginia', 'Pittsburgh', 'Georgia Tech', 'Notre Dame', 'Louisville', 'Miami', 'Wake Forest', 'Florida State', 'Virginia Tech', 'Clemson', 'Syracuse')) %>%
+  ggplot(aes(x=School)) +
+  geom_point(aes(y=Points, color=School)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# mean PPG average for PAC 12
+filter(NCAAData, School %in% c('UCLA', 'Washington', 'California', 'Arizona', 'Arizona State', 'USC', 'Colorado', 'Washington State', 'Utah', 'Stanford', 'Oregon State', 'Oregon')) %>%
+  group_by(School) %>%
+  summarize(Mean_Points_Per_Game=mean(Points))
+
+filter(NCAAData, School %in% c('UCLA', 'Washington', 'California', 'Arizona', 'Arizona State', 'USC', 'Colorado', 'Washington State', 'Utah', 'Stanford', 'Oregon State', 'Oregon')) %>%
+  ggplot(aes(x=School)) +
+  geom_point(aes(y=Points, color=School)) + 
+  labs(title="PAC 12 team scoring", x="", y="") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+ggplot(NCAAData, aes(x = Games, y = Position,)) + 
+    labs(title="For all of NCAA how many games does each position player play on average", x="", y="") +
+geom_jitter() + coord_flip()
+
+ggplot(NCAAData, aes(x = Points, y = Position,)) +
+  labs(title="For all of NCAA how many points does each position player score on average", x="", y="") +
+  geom_jitter() + coord_flip()
 
 
 
 ```
-
-
 
