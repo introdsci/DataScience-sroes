@@ -1,5 +1,5 @@
 ---
-title: "deliverable1.Rmd"
+title: "Deliverable 1"
 author: "Scott Roes"
 output:
   html_document:
