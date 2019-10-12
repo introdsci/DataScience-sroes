@@ -1,5 +1,5 @@
 ---
-title: " " #replace the title with something short and catchy to represent your project
+title: "Nothing beats college than college basketball!"
 subtitle: "Scott's Data Science Portfolio" #replace blank with your name
 output:
   html_document:
@@ -8,14 +8,15 @@ output:
 
 ## Abstract
 
-In this project I am observing nba stats from 2015/2016. I am a basketball fan and love looking at players stats and seeing how well or how not well they are preforming on the court. In this particular project I will be observing the players who did do well in the 2015/2016 season. My dataset is based on players with the highest points per game average and along with finding correlations that relate to high scoring.
+In this project I am gathering a Dataset for NCAA DI basketball stats. This dataset contains every player and school in DI for basketball. I will examine the two best conferences in the NCAA and determine the best teams for those conferences based on scoring. Furthermore I will examine games played based on position along with points scored on average by position
 
-In under 250 words give a brief summary of the project so far.
 
 ### 1. Discovery and Data Preparation
 
-Provide a one-sentence introduction with what is covered by the first deliverable along with a link to another html page that gives the details.
+The overall scoring average (PPG) between the two best NCAA conferences in the nation (ACC and PAC 12) as well as the number of games each position player plays for the entire NCAA along with how many points each position player scores.
+
 Link: [here](./deliverable1.html)
+
 ### 2. Model Planning and Building
 
 Coming soon...

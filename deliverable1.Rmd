@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "deliverable1.Rmd"
 author: "Scott Roes"
 output:
   html_document:
@@ -70,12 +70,6 @@ NCAAData <- filter(NCAAData, Player!="Cameron Curry")
 ```
 
 ```{r}
-
-
-filter(NCAAData, NCAAData$School=='Duke') %>%
-  ggplot(aes(x=Player)) +
-  geom_point(aes(y=Points)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
 # mean PPG average for ACC
