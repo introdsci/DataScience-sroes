@@ -1,3 +1,5 @@
+---
+title: "Deliverable 2"
 author: "Scott Roes"
 output:
   html_document:
@@ -40,7 +42,7 @@ colnames(NCAAData)[colnames(NCAAData) == "FTA"] <- "Free_Throw_Average"
 colnames(NCAAData)[colnames(NCAAData) == "FT%"] <- "Free_Throw_Percentage"
 colnames(NCAAData)[colnames(NCAAData) == "TRB"] <- "Total_Rebounds"
 colnames(NCAAData)[colnames(NCAAData) == "AST"] <- "Assists"
-colnames(NCAAData)[colnames(NCAAData) == TL"] <- "Steals"
+colnames(NCAAData)[colnames(NCAAData) == "STL"] <- "Steals"
 colnames(NCAAData)[colnames(NCAAData) == "BLK"] <- "Blocks"
 colnames(NCAAData)[colnames(NCAAData) == "TOV"] <- "Turnovers"
 colnames(NCAAData)[colnames(NCAAData) == "PF"] <- "Personal_Fouls"
@@ -71,6 +73,7 @@ colnames(NCAAData)[colnames(NCAAData) == "BPM"] <- "Box_Plus/Minus"
 NCAAData <- filter(NCAAData, Player!="Cameron Curry")
 
 ```
+
 Here is my second data source which includes the ranked teams. I obtained this data source via web scraping.
 ```{r}
 
@@ -97,6 +100,7 @@ Record <- rank %>%
 Rankings <- cbind.data.frame(Rank=Rank, Team=Team, Points=Points, Record=Record)
 
 ```
+
 To get a good idea here is a table of the Ranked teams and their total scoring I used from my second dataset.
 ```{r}
  
@@ -109,6 +113,7 @@ filter(Rankings, Team %in% c('Louisville (48)', 'Kansas (3)', 'Maryland', 'Michi
 
 
 ```
+
 Here are the top 25 ranked teams I used from my second dataset.
 ```{r}
 
@@ -117,6 +122,8 @@ Here are the top 25 ranked teams I used from my second dataset.
 
 
 ```
+
+
 Here I will show the players with the highest scoring along with their schools from my first dataset. Based on this view I tired to show the top scorers first but I wasnt able to write the correct syntax. With the correct syntax I would have shown a lot of high scoring players who were not on ranked teams. Then I would determine how many of those players were on ranked team and conclude that high scoring does not determine that you are on a ranked team. This is important becuase fans and scouts don't want to be fooled when a player who scores many points is not on a ranked team, meaning that certian player can be scoring high for reasons other than the team is good.
 ```{r}
 
@@ -124,3 +131,5 @@ Here I will show the players with the highest scoring along with their schools f
 
 
 ```
+
+
