@@ -1,4 +1,4 @@
-uthor: "Scott Roes"
+author: "Scott Roes"
 output:
   html_document:
     df_print: paged
