@@ -21,7 +21,7 @@ Link: [here](./deliverable1.html)
 
 The highest scoring players by points and if there on a ranked team or not. This will help us to predict if a high scoring player is on a ranked team or not.
 
-Link: https://github.com/introdsci/DataScience-sroes.git
+Link: [here](./deliverable2.html)
 
 ### 3. Results and Operationalization 
 
