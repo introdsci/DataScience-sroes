@@ -2,6 +2,7 @@
 title: "Deliverable 1"
 author: "Scott Roes"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
