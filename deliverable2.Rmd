@@ -6,7 +6,7 @@ output:
     df_print: paged
 ---
 
-I would like to predict if high scoring determines if you are on a ranked team or not. A lot of times there are players who score a lot but aren't on a ranked team. For many people including fans and scouts it will determine a lot about the player if he is not a ranked team or not. If that player is on a ranked team chances are that player has a great upside and potential. I will determine if high scoring means your are on a ranked team or not. I will do this through my second data source that stores the top 25 ranked teams in the nation and will use data from my first deliverable.
+I would like to predict if high scoring determines if you are on a good team or not. A lot of times there are players who score a lot but aren't on a good team. For many people including fans and scouts it will determine a lot about the player if he is not a good team or not. If that player is on a good team chances are that player has a great upside and potential. I will determine if high scoring means your are on a good team or not. I will do this through my second data source that stores the top 25 ranked teams in the nation and will use data from my first deliverable.
 ```{r}
 
 include <- function(library_name){
@@ -18,60 +18,11 @@ include("tidyverse")
 include("knitr")
 include("caret")
 include("rvest")
-
-#table from deliverable 1
-NCAAData <- read_csv("https://raw.githubusercontent.com/TWanish/NBAPlayerValue/master/data/ncaaStats.csv")
-
-# tidying data
-colnames(NCAAData)[colnames(NCAAData) == "Pos"] <- "Position"
-colnames(NCAAData)[colnames(NCAAData) == "G"] <- "Games"
-colnames(NCAAData)[colnames(NCAAData) == "AST%"] <- "Assist_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "BLK%"] <- "Block_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "MP"] <- "Minutes_Played"
-colnames(NCAAData)[colnames(NCAAData) == "FG"] <- "Field_Goal"
-colnames(NCAAData)[colnames(NCAAData) == "FGA"] <- "Field_Goal_Average"
-colnames(NCAAData)[colnames(NCAAData) == "FG%"] <- "Field_Goal_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "2P"] <- "Two_Pointers"
-colnames(NCAAData)[colnames(NCAAData) == "2PA"] <- "Two_Point_Average"
-colnames(NCAAData)[colnames(NCAAData) == "2P%"] <- "Two_Point_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "3P"] <- "Three_Pointers"
-colnames(NCAAData)[colnames(NCAAData) == "3PA"] <- "Three_Point_Average"
-colnames(NCAAData)[colnames(NCAAData) == "3P%"] <- "Three_Point_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "FT"] <- "Free_Throw"
-colnames(NCAAData)[colnames(NCAAData) == "FTA"] <- "Free_Throw_Average"
-colnames(NCAAData)[colnames(NCAAData) == "FT%"] <- "Free_Throw_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "TRB"] <- "Total_Rebounds"
-colnames(NCAAData)[colnames(NCAAData) == "AST"] <- "Assists"
-colnames(NCAAData)[colnames(NCAAData) == "STL"] <- "Steals"
-colnames(NCAAData)[colnames(NCAAData) == "BLK"] <- "Blocks"
-colnames(NCAAData)[colnames(NCAAData) == "TOV"] <- "Turnovers"
-colnames(NCAAData)[colnames(NCAAData) == "PF"] <- "Personal_Fouls"
-colnames(NCAAData)[colnames(NCAAData) == "PTS"] <- "Points"
-colnames(NCAAData)[colnames(NCAAData) == "ORtg"] <- "Offensive_Rating"
-colnames(NCAAData)[colnames(NCAAData) == "DRtg"] <- "Defensive_Rating"
-colnames(NCAAData)[colnames(NCAAData) == "PER"] <- "Player_Efficiency_Rating"
-colnames(NCAAData)[colnames(NCAAData) == "TS%"] <- "True_Shooting_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "eFG%"] <- "Effective_Field_Goal_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "3PAr"] <- "Three_Pointer_Attempt_Rate"
-colnames(NCAAData)[colnames(NCAAData) == "FTr"] <- "Free_Throw_Rate"
-colnames(NCAAData)[colnames(NCAAData) == "PProd"] <- "Points_Produced"
-colnames(NCAAData)[colnames(NCAAData) == "ORB%"] <- "Offensive_Rebound_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "DRB%"] <- "Defensive_Rebound_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "TRB%"] <- "Total_Rebound_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "STL%"] <- "Steal_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "TOV%"] <- "Turnover_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "USG%"] <- "Usage_Percentage"
-colnames(NCAAData)[colnames(NCAAData) == "OWS"] <- "Offensive_Win_Shares"
-colnames(NCAAData)[colnames(NCAAData) == "DWS"] <- "Defensive_Win_Shares"
-colnames(NCAAData)[colnames(NCAAData) == "WS"] <- "Win_Shares"
-colnames(NCAAData)[colnames(NCAAData) == "WS/40"] <- "Win_Shares_per40_Minutes"
-colnames(NCAAData)[colnames(NCAAData) == "OBPM"] <- "Offensive_Box_Plus/Minus"
-colnames(NCAAData)[colnames(NCAAData) == "DBPM"] <- "Defensive_Box_Plus/Minus"
-colnames(NCAAData)[colnames(NCAAData) == "BPM"] <- "Box_Plus/Minus"
+include("dplyr")
 
 
-NCAAData <- filter(NCAAData, Player!="Cameron Curry")
-
+purl("deliverable1.Rmd", output="part1.r")
+source("part1.r")
 ```
 
 Here is my second data source which includes the ranked teams. I obtained this data source via web scraping.
@@ -99,37 +50,77 @@ Record <- rank %>%
 
 Rankings <- cbind.data.frame(Rank=Rank, Team=Team, Points=Points, Record=Record)
 
+#tidying data
+Rankings$Team <- gsub(" \\(48\\)", "", Rankings$Team)
+Rankings$Team <- gsub(" \\(3\\)", "", Rankings$Team)
+Rankings$Team <- gsub(" \\(9\\)", "", Rankings$Team)
+Rankings$Team <- gsub(" \\(5\\)", "", Rankings$Team)
+
+
+colnames(Rankings)[colnames(Rankings)=="Team"] <- "School"
+colnames(Rankings)[colnames(Rankings)=="Points"] <- "Team_Points"
+colnames(Rankings)[colnames(Rankings)=="Rank"] <- "Team_Rank"
+colnames(Rankings)[colnames(Rankings)=="Record"] <- "Team_Record"
+
+Rankings$Team_Points <- gsub(",", "", Rankings$Team_Points)
+Rankings$Team_Points <- as.double(Rankings$Team_Points)
+
+
+NCAAData <- merge(x=NCAAData, y=Rankings, by="School", all.x=TRUE)
+
+
 ```
 
+Printing out NCAAData Table
+```{r}
+
+print(NCAAData)
+
+```
+
+Printing out Rankings Table
+```{r}
+
+print(Rankings)
+
+```
 To get a good idea here is a table of the Ranked teams and their total scoring I used from my second dataset.
 ```{r}
  
-
-filter(Rankings, Team %in% c('Louisville (48)', 'Kansas (3)', 'Maryland', 'Michigan (9)', 'Virginia (5)', 'Ohio State', 'North Carolina', 'Kentucky', 'Gonzaga', 'Duke', 'Michigan State', 'Arizona', 'Oregon', 'Auburn', 'Memphis', 'Seton Hall', 'Florida State', 'Baylor', 'Dayton', 'Colorado', 'Tennessee', 'Washington', 'Villanova', 'Butler', 'Utah State')) %>%
-  ggplot(aes(x=Points)) +
-  geom_jitter(aes(y=Team, color=Team)) + 
+ggplot(data=Rankings, aes(x=Points)) +
+  geom_jitter(aes(y=School, color=School))+
   labs(title="Top 25 Team Ranked Scoring", x="", y="") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
 ```
 
-Here are the top 25 ranked teams I used from my second dataset.
+Here I tried to use Points and other columns as an indicator to predict if high scoring determines how good the team is but I did not yield good results. However Rebounds gave me a good indicator to predict that good teams depend on rebounding. In order to use points as a good predictor I would need more paramaters or data.
+```{r}
+set.seed(385)
+top25 <- filter(NCAAData, !is.na(NCAAData$Team_Points))
+sample_selection <- top25$Team_Rank %>%
+  createDataPartition(p=0.75, list=FALSE)
+train <- top25[sample_selection, ]
+test <- top25[-sample_selection, ]
+train_model <- lm(Team_Rank ~ Minutes_Played + Points + Total_Rebounds + Assists + Steals + Field_Goal_Average, data=top25)
+summary(train_model)
+prediction <- train_model %>% predict(test)
+R2(prediction, test$Team_Rank)
+
+```
+Here I found that that Win Shares per 40 minutes (the entire game time + if they win) is a good indicator to predict that good teams have decent win shares.
 ```{r}
 
 
- select(Rankings, Rank, Team)
+train_model <- lm(Team_Rank ~ Total_Rebounds + Win_Shares_per40_Minutes, data=top25)
+summary(train_model)
+prediction <- train_model %>% predict(test)
+R2(prediction, test$Team_Rank)
 
 
 ```
 
 
-Here I will show the players with the highest scoring along with their schools from my first dataset. Based on this view I tired to show the top scorers first but I wasnt able to write the correct syntax. With the correct syntax I would have shown a lot of high scoring players who were not on ranked teams. Then I would determine how many of those players were on ranked team and conclude that high scoring does not determine that you are on a ranked team. This is important becuase fans and scouts don't want to be fooled when a player who scores many points is not on a ranked team, meaning that certian player can be scoring high for reasons other than the team is good.
-```{r}
-
- select(NCAAData, Player, Points, School)
-
-
-```
 
 
