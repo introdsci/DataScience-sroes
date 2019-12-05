@@ -23,6 +23,8 @@ include("dplyr")
 
 purl("deliverable1.Rmd", output="part1.r")
 source("part1.r")
+
+NCAAData <- as.data.frame(NCAAData)
 ```
 
 Here is my second data source which includes the ranked teams. I obtained this data source via web scraping.
@@ -74,14 +76,14 @@ NCAAData <- merge(x=NCAAData, y=Rankings, by="School", all.x=TRUE)
 Printing out NCAAData Table
 ```{r}
 
-print(NCAAData)
+(NCAAData)
 
 ```
 
 Printing out Rankings Table
 ```{r}
 
-print(Rankings)
+(Rankings)
 
 ```
 To get a good idea here is a table of the Ranked teams and their total scoring I used from my second dataset.
