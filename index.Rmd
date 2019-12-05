@@ -8,7 +8,7 @@ output:
 
 ## Abstract
 
-In this project I am gathering a Dataset for NCAA DI basketball stats. This dataset contains every player and school in DI for basketball. I will examine the two best conferences in the NCAA and determine the best teams for those conferences based on scoring. Furthermore I will examine games played based on position along with points scored on average by position
+In this project I am gathering a Dataset for NCAA DI basketball stats. This dataset contains every player and school in DI for basketball. I will examine the two best conferences in the NCAA and determine the best teams for those conferences based on scoring. Furthermore I will examine games played based on position along with points scored on average by position.
 
 
 ### 1. Discovery and Data Preparation
@@ -24,7 +24,6 @@ The highest scoring players by points and if there on a ranked team or not. This
 Link: [here](./deliverable2.html)
 
 ### 3. Results and Operationalization 
-
 
 
 
