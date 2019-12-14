@@ -25,5 +25,8 @@ Link: [here](./deliverable2.html)
 
 ### 3. Results and Operationalization 
 
+My new dataset I added for my new model did not produce useful results. I was my new dataset would yeild more varance but the output of my model was not useful. I believe I needed more data.
+
+Link: [here](./deliverable3.html)
 
 
