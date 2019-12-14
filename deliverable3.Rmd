@@ -1,0 +1,100 @@
+---
+title: "Deliverable 3"
+author: Scott Roes
+output: html_notebook
+---
+
+
+```{r include=FALSE}
+
+include <- function(library_name){
+  if( !(library_name %in% installed.packages()) )
+    install.packages(library_name) 
+  library(library_name, character.only=TRUE)
+}
+include("tidyverse")
+include("knitr")
+include("caret")
+include("rvest")
+include("dplyr")
+
+
+purl("deliverable2.Rmd", output="part2.r")
+source("part2.r")
+
+NCAAData <- as.data.frame(NCAAData)
+```
+In my last deliverable my conclusion and hypothesis did not stand when I tried to determine if high scoring means your on a ranked team. My data proved my models to be unaccurate.  I thought my problem was that I didn't have enough variance in my data. So instead of using just the top 25 ranked teams i added most of the ranked teams in the NCAA.This dataset that I web scraped contains just that. With this I'm hoping for better results because the variance in player stats in top teams is typically much smaller than the difference in stats between good and bad teams. Along with adding a third dataset I tidyed it lining it up with my first dataset so it will be able to merge on to it. I used gsub to take abbreviations out of the third dataset so they would align with the first dataset which contain no abbreviations.After that I merged both datasets by their school name.
+```{r}
+
+all_teams <- read_html("https://www.ncaa.com/rankings/basketball-men/d1/ncaa-mens-basketball-net-rankings")
+
+rank <- all_teams %>%
+  html_nodes("tbody") %>%
+  html_nodes("tr")
+
+Rank <- rank %>%
+  html_nodes("td:first_child") %>%
+  html_text() %>%
+  as.integer()
+
+School <- rank %>%
+  html_nodes("td:nth_child(3)") %>%
+  html_text()
+  
+Record <- rank %>%
+  html_nodes("td:nth_child(5)") %>%
+  html_text()
+
+list_of_schools <- cbind.data.frame(Rank=Rank, School=School, Record=Record)
+
+list_of_schools$School <- gsub("St\\.", "State", list_of_schools$School)
+list_of_schools$School <- gsub("Val\\.", "Valley State", list_of_schools$School)
+list_of_schools$School <- gsub("Cal State\\.", "CSU", list_of_schools$School)
+#list_of_schools$School <- gsub(" \\(5\\)", "", list_of_schools$School)
+
+
+Allteams <- merge(x=NCAAData, y=list_of_schools, by="School", all.x=TRUE)
+```
+First dataset. All NCAA Data.
+```{r}
+
+(Top25)
+
+```
+Second Dataset. Rankings of top 25 teams.
+```{r}
+
+(Rankings)
+
+```
+Third dataset. List of most NCAA teams added.
+```{r}
+(list_of_schools)
+
+```
+
+This view shows the rankings of most teams in the NCAA. With the 300+ teams to this I'm showing the potential higher variance and opportunity my conclusion can have with these teams added in my model.
+```{r}
+ggplot(list_of_schools, aes(Rank, School)) +
+  geom_smooth() +
+  geom_point(data = list_of_schools, aes(School = School), colour = 'blue', size = 1)
+
+```
+
+
+```{r}
+
+set.seed(385)
+top <- filter(Allteams, !is.na(Allteams$Rank))
+sample_selection <- top$Rank %>%
+  createDataPartition(p=0.75, list=FALSE)
+train <- top[sample_selection, ]
+test <- top[-sample_selection, ]
+train_model <- lm(Rank ~ Minutes_Played + Points + Total_Rebounds + Assists + Steals + Field_Goal_Average, data=top)
+summary(train_model)
+prediction <- train_model %>% predict(test)
+R2(prediction, test$Rank)
+
+
+```
