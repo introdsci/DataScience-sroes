@@ -1,11 +1,13 @@
 ---
 title: "Deliverable 3"
-author: Scott Roes
-output: html_notebook
+author: "Scott Roes"
+output:
+  html_document:
+    df_print: paged
 ---
 
-
-```{r include=FALSE}
+In my last deliverable my conclusion and hypothesis did not stand when I tried to determine if high scoring means your on a ranked team. My data proved my models to be inaccurate. I thought my problem was that I didn't have enough variance in my data. So instead of using just the top 25 ranked teams I added most of the ranked teams in the NCAA.
+```{r setup3, include=FALSE}
 
 include <- function(library_name){
   if( !(library_name %in% installed.packages()) )
@@ -24,8 +26,8 @@ source("part2.r")
 
 NCAAData <- as.data.frame(NCAAData)
 ```
-In my last deliverable my conclusion and hypothesis did not stand when I tried to determine if high scoring means your on a ranked team. My data proved my models to be unaccurate.  I thought my problem was that I didn't have enough variance in my data. So instead of using just the top 25 ranked teams i added most of the ranked teams in the NCAA.This dataset that I web scraped contains just that. With this I'm hoping for better results because the variance in player stats in top teams is typically much smaller than the difference in stats between good and bad teams. Along with adding a third dataset I tidyed it lining it up with my first dataset so it will be able to merge on to it. I used gsub to take abbreviations out of the third dataset so they would align with the first dataset which contain no abbreviations.After that I merged both datasets by their school name.
-```{r}
+This dataset that I web scraped contains most of the ranked teams in the NCAA. With this I'm hoping for better results because the variance in player stats in top teams is typically much smaller than the difference in stats between good and bad teams. Along with adding a third dataset I tidyed it by lining it up with my first dataset so it will be able to merge on to it. I used gsub to take abbreviations out of the third dataset so they would align with the first dataset which contain no abbreviations. After that I merged both datasets by their school name.
+```{r all_teams}
 
 all_teams <- read_html("https://www.ncaa.com/rankings/basketball-men/d1/ncaa-mens-basketball-net-rankings")
 
@@ -51,39 +53,38 @@ list_of_schools <- cbind.data.frame(Rank=Rank, School=School, Record=Record)
 list_of_schools$School <- gsub("St\\.", "State", list_of_schools$School)
 list_of_schools$School <- gsub("Val\\.", "Valley State", list_of_schools$School)
 list_of_schools$School <- gsub("Cal State\\.", "CSU", list_of_schools$School)
-#list_of_schools$School <- gsub(" \\(5\\)", "", list_of_schools$School)
 
 
 Allteams <- merge(x=NCAAData, y=list_of_schools, by="School", all.x=TRUE)
 ```
 First dataset. All NCAA Data.
-```{r}
+```{r top25-3}
 
 (Top25)
 
 ```
 Second Dataset. Rankings of top 25 teams.
-```{r}
+```{r rankings3}
 
 (Rankings)
 
 ```
 Third dataset. List of most NCAA teams added.
-```{r}
+```{r list_of_scools3}
+
 (list_of_schools)
 
 ```
-
-This view shows the rankings of most teams in the NCAA. With the 300+ teams to this I'm showing the potential higher variance and opportunity my conclusion can have with these teams added in my model.
-```{r}
-ggplot(list_of_schools, aes(Rank, School)) +
+This view shows the rankings of the top 20 and bottom 20 teams in the dataset to show the addition of ranks for lower ranked teams. With the 300+ teams added to this dataset I'm showing the potential higher variance and opportunity my conclusion can have with these teams added in my model.
+```{r ggplot3, warning=FALSE}
+filter(list_of_schools, Rank<=20 | Rank>=333) %>%
+  ggplot(aes(Rank, School)) +
   geom_smooth() +
-  geom_point(data = list_of_schools, aes(School = School), colour = 'blue', size = 1)
-
+  geom_point(aes(School = School), colour = 'blue', size = 1) 
 ```
 
-
-```{r}
+Here I use use my third dataset and test my new model and see if it will yield better results. In this model I used cross-validation methods by incorperating RMSE and MAE test samples to quantify a perdiction error. I also tried calculating the prediction error rate by dividing the RMSE by the average value of the outcome variable. After doing this the model tells us that the varibles are not a good indicator for accurate predictions.
+```{r cross_validation}
 
 set.seed(385)
 top <- filter(Allteams, !is.na(Allteams$Rank))
@@ -96,5 +97,23 @@ summary(train_model)
 prediction <- train_model %>% predict(test)
 R2(prediction, test$Rank)
 
+data.frame( R2 = R2(prediction, test$Steals),
+            RMSE = RMSE(prediction, test$Steals),
+            MAE = MAE(prediction, test$Steals))
+RMSE(prediction, test$Steals)/mean(test$Steals)
+
 
 ```
+Here I tried K-fold cross validation to see if anyone of my variables was a good predictor. It turns out none of them are good. I was able to increase my R-value a little bit by adding more variables but it was still not good enough to make a solid perdiction. This tells us that overall my variables are not a good indicator for determining if your on a good team or not.
+```{r K-fold_cross_validation}
+
+set.seed(123)
+train.control <- trainControl(method = "repeatedcv", 
+                              number = 10, repeats = 3)
+model <- train(Rank ~ Win_Shares_per40_Minutes + Defensive_Rating + Player_Efficiency_Rating + Assist_Percentage + Field_Goal + Points + True_Shooting_Percentage + Free_Throw_Rate + Block_Percentage + Win_Shares + Total_Rebound_Percentage + Total_Rebounds + Assists, data = top, method = "lm",
+               trControl = train.control)
+
+print(model)
+
+```
+In conclusion it appears that my new model and cross-validation methods did not yield beter results and did not confirm my hypothesis. It increased my R value a little but it was still not enough to back up my hypothesis. I believe this is becuase in my second dataset it included the teams total points, whereas my third dataset did not. In order to operationalize it I would have to obtain total team points for ranked teams in my third dataset which I could not find. I could not find a dataset that contain all the other ranked teams along with their total points. I needed more data in order to prove my hypothesis, data such as total points for all the other teams could have proved it. I was hoping if my data was proved to be useful this could help out scouts of the NBA to determine if a player is good enough or has potential for the next level of basketball which would be the NBA.
