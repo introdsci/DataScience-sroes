@@ -7,7 +7,7 @@ output:
 ---
 
 I would like to predict if high scoring determines if you are on a good team or not. A lot of times there are players who score a lot but aren't on a good team. For many people including fans and scouts it will determine a lot about the player if he is not a good team or not. If that player is on a good team chances are that player has a great upside and potential. I will determine if high scoring means your are on a good team or not. I will do this through my second data source that stores the top 25 ranked teams in the nation and will use data from my first deliverable.
-```{r}
+```{r setup, include=FALSE}
 
 include <- function(library_name){
   if( !(library_name %in% installed.packages()) )
@@ -27,8 +27,8 @@ source("part1.r")
 NCAAData <- as.data.frame(NCAAData)
 ```
 
-Here is my second data source which includes the ranked teams. I obtained this data source via web scraping.
-```{r}
+Here is my second data source which includes the ranked teams. I obtained this data source via web scraping. I used gsub functions to take out unwanted data so they can match and have the same format from my first dataset.After that I merged the two datasets by school.
+```{r web_scraping}
 
 rankings_web <- read_html("https://www.ncaa.com/rankings/basketball-men/d1/associated-press")
 
@@ -44,17 +44,16 @@ Team <- rank %>%
   html_nodes("td:nth_child(2)") %>%
   html_text()
 Points <- rank %>%
-  html_nodes("td:nth_child(3)") %>%
+  html_nodes("td:nth_child(4)") %>%
   html_text()
 Record <- rank %>%
-  html_nodes("td:nth_child(4)") %>%
+  html_nodes("td:nth_child(3)") %>%
   html_text()
 
 Rankings <- cbind.data.frame(Rank=Rank, Team=Team, Points=Points, Record=Record)
 
-#tidying data
-Rankings$Team <- gsub(" \\(48\\)", "", Rankings$Team)
-Rankings$Team <- gsub(" \\(3\\)", "", Rankings$Team)
+Rankings$Team <- gsub(" \\(55\\)", "", Rankings$Team)
+Rankings$Team <- gsub(" \\(4\\)", "", Rankings$Team)
 Rankings$Team <- gsub(" \\(9\\)", "", Rankings$Team)
 Rankings$Team <- gsub(" \\(5\\)", "", Rankings$Team)
 
@@ -68,26 +67,26 @@ Rankings$Team_Points <- gsub(",", "", Rankings$Team_Points)
 Rankings$Team_Points <- as.double(Rankings$Team_Points)
 
 
-NCAAData <- merge(x=NCAAData, y=Rankings, by="School", all.x=TRUE)
+Top25 <- merge(x=NCAAData, y=Rankings, by="School", all.x=TRUE)
 
 
 ```
 
-Printing out NCAAData Table
-```{r}
+Printing out NCAAData Table.
+```{r top25}
 
-(NCAAData)
+(Top25)
 
 ```
 
-Printing out Rankings Table
-```{r}
+Printing out Rankings Table.
+```{r rankings}
 
 (Rankings)
 
 ```
 To get a good idea here is a table of the Ranked teams and their total scoring I used from my second dataset.
-```{r}
+```{r ggplot}
  
 ggplot(data=Rankings, aes(x=Points)) +
   geom_jitter(aes(y=School, color=School))+
@@ -97,32 +96,31 @@ ggplot(data=Rankings, aes(x=Points)) +
 
 ```
 
-Here I tried to use Points and other columns as an indicator to predict if high scoring determines how good the team is but I did not yield good results. However Rebounds gave me a good indicator to predict that good teams depend on rebounding. In order to use points as a good predictor I would need more paramaters or data.
-```{r}
+Here I tried to use Points and other columns as an indicator to predict if high scoring determines how good the team is but I did not yield good results. However Rebounds gave me a good indicator to predict that good teams depend on rebounding. In order to use points as a good predictor I would need more paramaters or data. After using multiple variables this model did not prove to be useful becuase my R-value is much too small to make a prediction.
+```{r predictor}
 set.seed(385)
-top25 <- filter(NCAAData, !is.na(NCAAData$Team_Points))
-sample_selection <- top25$Team_Rank %>%
+top <- filter(Top25, !is.na(Top25$Team_Points))
+sample_selection <- top$Team_Rank %>%
   createDataPartition(p=0.75, list=FALSE)
-train <- top25[sample_selection, ]
-test <- top25[-sample_selection, ]
-train_model <- lm(Team_Rank ~ Minutes_Played + Points + Total_Rebounds + Assists + Steals + Field_Goal_Average, data=top25)
+train <- top[sample_selection, ]
+test <- top[-sample_selection, ]
+train_model <- lm(Team_Rank ~ Minutes_Played + Points + Total_Rebounds + Assists + Steals + Field_Goal_Average, data=top)
 summary(train_model)
 prediction <- train_model %>% predict(test)
 R2(prediction, test$Team_Rank)
 
 ```
-Here I found that that Win Shares per 40 minutes (the entire game time + if they win) is a good indicator to predict that good teams have decent win shares.
-```{r}
+Here I found that that Win Shares per 40 minutes (the entire game time + if they win) is a good indicator to predict that good teams have decent win shares. It was the best predictor I could find although the R value is still too small to make a good prediction.
+```{r train_models}
 
 
-train_model <- lm(Team_Rank ~ Total_Rebounds + Win_Shares_per40_Minutes, data=top25)
+train_model <- lm(Team_Rank ~ Total_Rebounds + Win_Shares_per40_Minutes, data=top)
 summary(train_model)
 prediction <- train_model %>% predict(test)
 R2(prediction, test$Team_Rank)
 
 
 ```
-
 
 
 
