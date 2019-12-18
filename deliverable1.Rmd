@@ -6,11 +6,17 @@ output:
     df_print: paged
 ---
 
-```{r setup, include=FALSE}
-library("tidyverse")
-library("dplyr")
-library("ggplot2")
-
+```{r include=FALSE}
+include <- function(library_name){
+  if( !(library_name %in% installed.packages()) )
+    install.packages(library_name) 
+  library(library_name, character.only=TRUE)
+}
+include("tidyverse")
+include("knitr")
+include("caret")
+include("rvest")
+include("dplyr")
 ```
 The dataset I included for this project was tidy and mostly clean to begin with. In order to get a completely clean dataset, I renamed columns for easy interpretation. I also removed one observation for Cameron Curry due to the format not being the same as the other observations.
 
@@ -69,10 +75,9 @@ colnames(NCAAData)[colnames(NCAAData) == "BPM"] <- "Box_Plus/Minus"
 NCAAData <- filter(NCAAData, Player!="Cameron Curry")
 ```
 
-```{r}
+These views will show the number of points for all ACC teams as well as their mean PPG average.
+```{r ACC}
 
-
-# mean PPG average for ACC
 filter(NCAAData, School %in% c('Duke', 'North Carolina', 'Boston College', 'Virginia', 'Pittsburgh', 'Georgia Tech', 'Notre Dame', 'Louisville', 'Miami', 'Wake Forest', 'Florida State', 'Virginia Tech', 'Clemson', 'Syracuse')) %>%
   group_by(School) %>%
   summarize(Mean_Points_Per_Game=mean(Points))
@@ -81,8 +86,10 @@ filter(NCAAData, School %in% c('Duke', 'North Carolina', 'Boston College', 'Virg
   ggplot(aes(x=School)) +
   geom_point(aes(y=Points, color=School)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
 
-# mean PPG average for PAC 12
+These views will show the number of points for all Pac12 teams as well as their mean PPG average.
+```{r PAC12}
 filter(NCAAData, School %in% c('UCLA', 'Washington', 'California', 'Arizona', 'Arizona State', 'USC', 'Colorado', 'Washington State', 'Utah', 'Stanford', 'Oregon State', 'Oregon')) %>%
   group_by(School) %>%
   summarize(Mean_Points_Per_Game=mean(Points))
@@ -92,8 +99,10 @@ filter(NCAAData, School %in% c('UCLA', 'Washington', 'California', 'Arizona', 'A
   geom_point(aes(y=Points, color=School)) + 
   labs(title="PAC 12 team scoring", x="", y="") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
 
-
+These views will predict how many games each position player will play on average and how many points each position player scores on average.
+```{r ggplot1}
 ggplot(NCAAData, aes(x = Games, y = Position,)) + 
     labs(title="For all of NCAA how many games does each position player play on average", x="", y="") +
 geom_jitter() + coord_flip()
@@ -102,7 +111,7 @@ ggplot(NCAAData, aes(x = Points, y = Position,)) +
   labs(title="For all of NCAA how many points does each position player score on average", x="", y="") +
   geom_jitter() + coord_flip()
 
-
-
 ```
+
+
 
